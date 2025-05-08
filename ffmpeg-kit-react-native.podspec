@@ -19,22 +19,21 @@ Pod::Spec.new do |s|
     :type => 'zip'
   }
   s.default_subspec   = 'min-gpl'
-
+	
   s.dependency "React-Core"
 
-	s.vendored_frameworks = [
-	'frameworks/ffmpegkit.xcframework',
-	'frameworks/libavcodec.xcframework',
-	'frameworks/libavdevice.xcframework',
-	'frameworks/libavfilter.xcframework',
-	'frameworks/libavformat.xcframework',
-	'frameworks/libavutil.xcframework',
-	'frameworks/libswresample.xcframework',
-	'frameworks/libswscale.xcframework'
+  s.vendored_frameworks = [
+    'ffmpeg-kit-ios-full-gpl/frameworks/ffmpegkit.xcframework',
+    'ffmpeg-kit-ios-full-gpl/frameworks/libavcodec.xcframework',
+    'ffmpeg-kit-ios-full-gpl/frameworks/libavdevice.xcframework',
+    'ffmpeg-kit-ios-full-gpl/frameworks/libavfilter.xcframework',
+    'ffmpeg-kit-ios-full-gpl/frameworks/libavformat.xcframework',
+    'ffmpeg-kit-ios-full-gpl/frameworks/libavutil.xcframework',
+    'ffmpeg-kit-ios-full-gpl/frameworks/libswresample.xcframework',
+    'ffmpeg-kit-ios-full-gpl/frameworks/libswscale.xcframework'
 	]
 
   s.libraries = [ "z", "bz2", "c++", "iconv" ]
-
   s.frameworks = [ "AudioToolbox", "AVFoundation", "CoreMedia", "VideoToolbox" ]
   
   s.subspec 'min' do |ss|
