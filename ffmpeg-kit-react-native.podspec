@@ -18,7 +18,7 @@ Pod::Spec.new do |s|
     :http => 'https://github.com/BedoEbied/ffmpeg-kit-react-native/releases/download/v6.0/ffmpeg-kit-ios-full-gpl-6.0-ios-xcframework.zip',
     :type => 'zip'
   }
-  s.default_subspec   = 'min-gpl'
+  s.default_subspec   = 'full-gpl'
 
   s.dependency "React-Core"
 
