@@ -15,8 +15,9 @@ Pod::Spec.new do |s|
   s.static_framework  = true
 
   s.source = {
-    :http => 'https://github.com/BedoEbied/ffmpeg-kit-react-native/releases/download/v6.0/ffmpeg-kit-ios-full-gpl-6.0-ios-xcframework.zip',
-    :type => 'zip'
+    :http => 'https://github.com/BedoEbied/ffmpeg-kit-react-native.git',
+		:tag => "react.native.v#{s.version}",
+    # :type => 'zip'
   }
   s.default_subspec   = 'full-gpl'
 
