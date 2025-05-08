@@ -15,13 +15,24 @@ Pod::Spec.new do |s|
   s.static_framework  = true
 
   s.source = {
-    :http => 'https://github.com/BedoEbied/ffmpeg-kit-react-native/releases/download/react.native.v6.0.2/ffmpeg-kit-ios-full-gpl-6.0-ios-xcframework.zip',
+    :http => 'https://github.com/BedoEbied/ffmpeg-kit-react-native/releases/download/v6.0/ffmpeg-kit-ios-full-gpl-6.0-ios-xcframework.zip',
     :type => 'zip'
   }
   s.default_subspec   = 'min-gpl'
 
   s.dependency "React-Core"
-  
+
+	s.vendored_frameworks = [
+	'frameworks/ffmpegkit.xcframework',
+	'frameworks/libavcodec.xcframework',
+	'frameworks/libavdevice.xcframework',
+	'frameworks/libavfilter.xcframework',
+	'frameworks/libavformat.xcframework',
+	'frameworks/libavutil.xcframework',
+	'frameworks/libswresample.xcframework',
+	'frameworks/libswscale.xcframework'
+	]
+
   s.libraries = [ "z", "bz2", "c++", "iconv" ]
 
   s.frameworks = [ "AudioToolbox", "AVFoundation", "CoreMedia", "VideoToolbox" ]
@@ -43,16 +54,7 @@ Pod::Spec.new do |s|
   s.subspec 'min-gpl' do |ss|
       ss.source_files      = '**/FFmpegKitReactNativeModule.m',
                              '**/FFmpegKitReactNativeModule.h'
-      ss.vendored_frameworks = [
-        'frameworks/ffmpegkit.xcframework',
-        'frameworks/libavcodec.xcframework',
-        'frameworks/libavdevice.xcframework',
-        'frameworks/libavfilter.xcframework',
-        'frameworks/libavformat.xcframework',
-        'frameworks/libavutil.xcframework',
-        'frameworks/libswresample.xcframework',
-        'frameworks/libswscale.xcframework'
-      ]
+
       ss.ios.deployment_target = '12.1'
   end
 
