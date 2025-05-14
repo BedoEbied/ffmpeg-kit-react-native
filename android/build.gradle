@@ -11,10 +11,6 @@ buildscript {
 
 apply plugin: 'com.android.library'
 
-static def safePackageName(String packageName) {
-  packageName.replace("-lts", "")
-}
-
 def safePackageVersion(String packageName) {
   def version = project.properties['ffmpegKit.android.main.version']
   def ltsVersion = project.properties['ffmpegKit.android.lts.version']
@@ -51,12 +47,18 @@ android {
     sourceCompatibility JavaVersion.VERSION_11
     targetCompatibility JavaVersion.VERSION_11
   }
+
 }
 
 repositories {
-  mavenCentral()
   google()
+  mavenCentral()
+  flatDir {
+    dirs 'libs'
+  }
 
+
+  // (existing React Native repo detection logic unchanged)
   def found = false
   def defaultDir = null
   def androidSourcesName = 'React Native sources'
@@ -64,51 +66,26 @@ repositories {
   if (rootProject.ext.has('reactNativeAndroidRoot')) {
     defaultDir = rootProject.ext.get('reactNativeAndroidRoot')
   } else {
-    defaultDir = new File(
-      projectDir,
-      'node_modules/react-native/android'
-    )
+    defaultDir = new File(projectDir, 'node_modules/react-native/android')
   }
 
   if (defaultDir.exists()) {
-    maven {
-      url defaultDir.toString()
-      name androidSourcesName
-    }
-
+    maven { url defaultDir.toString(); name androidSourcesName }
     logger.info(":${project.name}:reactNativeAndroidRoot ${defaultDir.canonicalPath}")
     found = true
   } else {
     def parentDir = rootProject.projectDir
-
     1.upto(5, {
       if (found) return true
       parentDir = parentDir.parentFile
-
-      def androidSourcesDir = new File(
-        parentDir,
-        'node_modules/react-native'
-      )
-
-      def androidPrebuiltBinaryDir = new File(
-        parentDir,
-        'node_modules/react-native/android'
-      )
-
+      def androidSourcesDir = new File(parentDir, 'node_modules/react-native')
+      def androidPrebuiltBinaryDir = new File(parentDir, 'node_modules/react-native/android')
       if (androidPrebuiltBinaryDir.exists()) {
-        maven {
-          url androidPrebuiltBinaryDir.toString()
-          name androidSourcesName
-        }
-
+        maven { url androidPrebuiltBinaryDir.toString(); name androidSourcesName }
         logger.info(":${project.name}:reactNativeAndroidRoot ${androidPrebuiltBinaryDir.canonicalPath}")
         found = true
       } else if (androidSourcesDir.exists()) {
-        maven {
-          url androidSourcesDir.toString()
-          name androidSourcesName
-        }
-
+        maven { url androidSourcesDir.toString(); name androidSourcesName }
         logger.info(":${project.name}:reactNativeAndroidRoot ${androidSourcesDir.canonicalPath}")
         found = true
       }
@@ -116,34 +93,14 @@ repositories {
   }
 
   if (!found) {
-    throw new GradleException(
-      "${project.name}: unable to locate React Native android sources. " +
-        "Ensure you have you installed React Native as a dependency in your project and try again."
-    )
+    throw new GradleException("${project.name}: unable to locate React Native android sources.")
   }
 }
 
 dependencies {
   api 'com.facebook.react:react-native:+'
 
-  def ffmpegPackageValue = safeExtGet('ffmpegKitPackage', 'full-gpl') // Default to 'full-gpl as fallback'
+  def ffmpegPackageValue = safeExtGet('ffmpegKitPackage', 'min-gpl') // min-gpl, https, etc.
 
-    logger.info(":${project.name}: Using custom ffmpeg-kit-${ffmpegPackageValue} AAR from GitHub Releases")
-
-    def githubRepoOwner = "BedoEbied"
-    def githubRepoName = "ffmpeg-kit-react-native"
-    def githubReleaseTag = "v6.0"
-
-    def aarFileName = "ffmpeg-kit-${ffmpegPackageValue}-6.0-2.aar"
-
-    def aarUrl = "https://github.com/${githubRepoOwner}/${githubRepoName}/releases/download/${githubReleaseTag}/${aarFileName}"
-
-    implementation(aarUrl) {
-      artifact {
-        // You can give it a logical name; this doesn't affect the download
-        name = "ffmpeg-kit-${ffmpegPackageValue}-custom-github"
-        type = 'aar'
-      }
-
-    }
+  implementation(name: 'ffmpeg-kit-min-gpl-6.0-2', ext: 'aar') 
 }
